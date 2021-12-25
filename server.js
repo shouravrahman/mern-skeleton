@@ -23,9 +23,10 @@ mongoose.connect(URI, {}, (err) => {
 
 	console.log('database connected')
 })
-
+//routes
+app.use('/users', require('./routes/user-routes'))
 const port = process.env.PORT || 5000
 
-app.get('/', (req, res) => res.send('Hello nigggga'))
+// app.get('/', (req, res) => res.send('Hello nigga'))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
