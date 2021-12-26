@@ -120,6 +120,18 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
+	resetPassword: async (req, res) => {
+		try {
+			const { password } = req.body
+
+			const passwordHash = await bcrypt.hash(password, 12)
+
+			await User.findOneAndUpdate({ _id: req.user.id }, { password: passwordHash })
+			res.json({ msg: 'Password successfully changed!' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
 }
 const validateEmail = (email) => {
 	return String(email)
