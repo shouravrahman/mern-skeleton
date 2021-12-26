@@ -11,8 +11,8 @@ router.post('/forgotPassword', userCtrl.forgotPassword)
 router.post('/resetPassword', authCheck, userCtrl.resetPassword)
 router.post('/info', authCheck, userCtrl.getUserInfo)
 router.post('/info/all', authCheck, adminCheck, userCtrl.getUserInfo)
-route.put('/update', authCheck, userCtrl.updateUserInfo)
-route.put('/update_role/:id', authCheck, adminCheck, userCtrl.updateUserRole)
-route.delete('/delete/:id', authCheck, adminCheck, userCtrl.deleteUser)
+router.put('/update', authCheck, userCtrl.updateUserInfo)
+router.put('/update_role/:id', authCheck, adminCheck, userCtrl.updateUserRole)
+router.delete('/delete/:id', authCheck, adminCheck, userCtrl.deleteUser)
 
 module.exports = router
