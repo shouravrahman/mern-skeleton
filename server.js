@@ -25,6 +25,8 @@ mongoose.connect(URI, {}, (err) => {
 })
 //routes
 app.use('/users', require('./routes/user-routes'))
+app.use('/api', require('./routes/uploadImage-route'))
+
 const port = process.env.PORT || 5000
 
 // app.get('/', (req, res) => res.send('Hello nigga'))
