@@ -87,6 +87,23 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
+	getAccessToken: async (req, res) => {
+		try {
+			const rf_token = req.cookies.refreshToken
+
+			if (!rf_token) return res.status(400).json({ msg: 'please login now!' })
+
+			jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+				if (err) res.status(400).json({ msg: 'please login now!' })
+			})
+
+			const access_token = createAccessToken({ id: user.id })
+
+			res.json({ access_token })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
 }
 const validateEmail = (email) => {
 	return String(email)
