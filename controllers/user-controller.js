@@ -132,6 +132,56 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
+	logout: async (req, res) => {
+		try {
+			res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
+			return res.json({ msg: 'Logged out!' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	getUserInfo: async (req, res) => {
+		try {
+			const user = await User.findById(req.user.id).select('-password')
+			res.json(user)
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	getAllUserInfo: async (req, res) => {
+		try {
+			const users = await User.find().select('-password')
+			res.json(users)
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	updateUserRole: async (req, res) => {
+		try {
+			const { role } = req.body
+			await User.findOneAndUpdate({ _id: req.params.id }, { role })
+			res.json({ msg: 'Update Success!' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	deleteUser: async (req, res) => {
+		try {
+			await User.findByIdAndDelete(req.params.id)
+			res.json({ msg: 'Delete Success!' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	updateUserInfo: async (req, res) => {
+		try {
+			const { name, avatar } = req.body
+			await User.findOneAndUpdate({ _id: req.user.id }, { name, avatar })
+			res.json({ msg: 'Update Success!' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
 }
 const validateEmail = (email) => {
 	return String(email)
