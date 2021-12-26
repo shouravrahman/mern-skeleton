@@ -104,6 +104,22 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
+	forgotPassword: async (req, res) => {
+		try {
+			const { email } = req.body
+			const user = await User.findOne({ email })
+			if (!user) return res.status(400).json({ msg: 'This email does not exist.' })
+
+			const access_token = createAccessToken({ id: user._id })
+			const url = `${CLIENT_URL}/user/reset/${access_token}`
+
+			sendMail(email, url, 'Reset your password!')
+
+			res.json({ msg: 'password reset link sent.please check your email.' })
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
 }
 const validateEmail = (email) => {
 	return String(email)
