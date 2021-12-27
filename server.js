@@ -10,18 +10,18 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(
-	fileUpload({
-		useTempFiles: true,
-	})
+    fileUpload({
+        useTempFiles: true,
+    })
 )
 
 //db connect
 const URI = process.env.MONGO_URI
 
 mongoose.connect(URI, {}, (err) => {
-	if (err) throw err
+    if (err) throw err
 
-	console.log('database connected')
+    console.log('database connected')
 })
 //routes
 app.use('/users', require('./routes/user-routes'))
