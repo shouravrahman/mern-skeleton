@@ -11,6 +11,7 @@ const userCtrl = {
 
 			if (!name || !email || !password)
 				return res.status(400).json({ msg: 'Please fill out all the fields!' })
+
 			if (!validateEmail(email))
 				return res.status(400).json({ msg: 'Please provide a valid email address!' })
 			if (!validatePassword(password))
@@ -63,43 +64,36 @@ const userCtrl = {
 	login: async (req, res) => {
 		try {
 			const { email, password } = req.body
-
 			const user = await User.findOne({ email })
-
-			if (!user)
-				return res
-					.status(400)
-					.json({ msg: 'This email does not exist.Please register first' })
+			if (!user) return res.status(400).json({ msg: 'This email does not exist.' })
 
 			const isMatch = await bcrypt.compare(password, user.password)
-			if (!isMatch) return res.status(400).json({ msg: 'Incorrect password' })
+			if (!isMatch) return res.status(400).json({ msg: 'Password is incorrect.' })
 
 			const refresh_token = createRefreshToken({ id: user._id })
-
 			res.cookie('refreshToken', refresh_token, {
 				httpOnly: true,
-				path: '/user/refresh_token',
-				maxAge: 7 * 24 * 60 * 60 * 1000, //7d
+				path: '/users/refresh_token',
+				maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 			})
 
-			return res.json({ msg: 'Login success' })
+			res.json({ msg: 'Login success!' })
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
-	getAccessToken: async (req, res) => {
+	getAccessToken: (req, res) => {
 		try {
+			// console.log(req.headers.cookie)
 			const rf_token = req.cookies.refreshToken
-
-			if (!rf_token) return res.status(400).json({ msg: 'please login now!' })
+			if (!rf_token) return res.status(400).json({ msg: 'Please login now!' })
 
 			jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-				if (err) res.status(400).json({ msg: 'please login now!' })
+				if (err) return res.status(400).json({ msg: 'Please login now!' })
+
+				const access_token = createAccessToken({ id: user.id })
+				res.json({ access_token })
 			})
-
-			const access_token = createAccessToken({ id: user.id })
-
-			res.json({ access_token })
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })
 		}
@@ -134,7 +128,7 @@ const userCtrl = {
 	},
 	logout: async (req, res) => {
 		try {
-			res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
+			res.clearCookie('refreshToken', { path: '/users/refresh_token' })
 			return res.json({ msg: 'Logged out!' })
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })
@@ -150,7 +144,7 @@ const userCtrl = {
 	},
 	getAllUserInfo: async (req, res) => {
 		try {
-			const users = await User.find().select('-password')
+			const users = await User.find({}).select('-password')
 			res.json(users)
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })
