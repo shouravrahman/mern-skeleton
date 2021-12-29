@@ -29,5 +29,3 @@ const adminCheck = async (req, res, next) => {
 	}
 }
 module.exports = { authCheck, adminCheck }
-
-//TODO: export all functions from this file,require user model,make async ==========> *done*
