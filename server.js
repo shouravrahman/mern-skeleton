@@ -4,25 +4,26 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
-
 const app = express()
 
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 app.use(
-    fileUpload({
-        useTempFiles: true,
-    })
+	fileUpload({
+		useTempFiles: true,
+	})
 )
 
 //db connect
 const URI = process.env.MONGO_URI
 
 mongoose.connect(URI, {}, (err) => {
-    if (err) throw err
+	if (err) throw err
 
-    console.log('database connected')
+	console.log('database connected')
 })
+
 //routes
 app.use('/users', require('./routes/user-routes'))
 app.use('/api', require('./routes/uploadImage-route'))
