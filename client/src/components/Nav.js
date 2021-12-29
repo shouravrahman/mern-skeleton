@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom'
 const NavBar = () => {
 	return (
 		<div>
-			<Navbar color='dark' expand='md' dark>
+			<Navbar color='light' expand='md' light>
 				<NavbarBrand>
 					<Link to='/'>Skeleton</Link>
 				</NavbarBrand>
