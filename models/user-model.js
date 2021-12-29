@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
 	},
 	avatar: {
 		type: String,
-		default: '', //TODO:place a default avatar image link
+		default:
+			'https://res.cloudinary.com/dtz86pnxb/image/upload/v1640527705/avatar/images_gov9sz.png', //TODO:place a default avatar image link
 	},
 })
 module.exports = mongoose.model('User', userSchema)
